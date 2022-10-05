@@ -10,7 +10,7 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
         objective_function,
         n_iteration: int = 1000,
         timeout: int = None,
-        population_size=50,
+        population_size=96865
         method=1,
         minimize=True,
         logger=None,
@@ -87,15 +87,15 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
         self.feature_list = np.array(list(X_train.columns))
         self.best_results_per_iteration = {}
         self.best_score = np.inf
-        self.best_dim = np.ones(X_train.shape[1])
+        self.best_dim = np.ones(X_train.shape[50])
 
         self.initialize_population(X_train)
 
-        self.best_score_dimension = np.ones(X_train.shape[1])
+        self.best_score_dimension = np.ones(X_train.shape[50])
 
-        self.alpha_wolf_dimension, self.alpha_wolf_fitness = np.ones(X_train.shape[1]), np.inf
-        self.beta_wolf_dimension, self.beta_wolf_fitness = np.ones(X_train.shape[1]), np.inf
-        self.delta_wolf_dimension, self.delta_wolf_fitness = np.ones(X_train.shape[1]), np.inf
+        self.alpha_wolf_dimension, self.alpha_wolf_fitness = np.ones(X_train.shape[50]), np.inf
+        self.beta_wolf_dimension, self.beta_wolf_fitness = np.ones(X_train.shape[50]), np.inf
+        self.delta_wolf_dimension, self.delta_wolf_fitness = np.ones(X_train.shape[50]), np.inf
 
         if self.timeout is not None:
             timeout_upper_limit = time.time() + self.timeout
@@ -140,16 +140,16 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
                     self.delta_wolf_dimension = dim
 
             if (self.method == 1) | (self.method == 2):
-                C1 = 2 * np.random.random((self.population_size, X_train.shape[1]))
-                A1 = 2 * a * np.random.random((self.population_size, X_train.shape[1])) - a
+                C1 = 2 * np.random.random((self.population_size, X_train.shape[50]))
+                A1 = 2 * a * np.random.random((self.population_size, X_train.shape[50])) - a
                 d_alpha = abs(C1 * self.alpha_wolf_dimension - self.individuals)
 
-                C2 = 2 * np.random.random((self.population_size, X_train.shape[1]))
-                A2 = 2 * a * np.random.random((self.population_size, X_train.shape[1])) - a
+                C2 = 2 * np.random.random((self.population_size, X_train.shape[50]))
+                A2 = 2 * a * np.random.random((self.population_size, X_train.shape[50])) - a
                 d_beta = abs(C2 * self.beta_wolf_dimension - self.individuals)
 
-                C3 = 2 * np.random.random((self.population_size, X_train.shape[1]))
-                A3 = 2 * a * np.random.random((self.population_size, X_train.shape[1])) - a
+                C3 = 2 * np.random.random((self.population_size, X_train.shape[50]))
+                A3 = 2 * a * np.random.random((self.population_size, X_train.shape[50])) - a
                 d_delta = abs(C3 * self.delta_wolf_dimension - self.individuals)
 
             if self.method == 2:
@@ -157,7 +157,7 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
                 X2 = abs(self.beta_wolf_dimension - A2 * d_beta)
                 X3 = abs(self.delta_wolf_dimension - A3 * d_delta)
                 self.individuals = np.where(
-                    np.random.uniform(size=(self.population_size, X_train.shape[1]))
+                    np.random.uniform(size=(self.population_size, X_train.shape[50]))
                     <= self.sigmoid((X1 + X2 + X3) / 3),
                     1,
                     0,
@@ -169,7 +169,7 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
                         self.alpha_wolf_dimension
                         + np.where(
                             self.sigmoid(A1 * d_alpha)
-                            > np.random.uniform(size=(self.population_size, X_train.shape[1])),
+                            > np.random.uniform(size=(self.population_size, X_train.shape[50])),
                             1,
                             0,
                         )
@@ -183,7 +183,7 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
                         self.beta_wolf_dimension
                         + np.where(
                             self.sigmoid(A1 * d_beta)
-                            > np.random.uniform(size=(self.population_size, X_train.shape[1])),
+                            > np.random.uniform(size=(self.population_size, X_train.shape[50])),
                             1,
                             0,
                         )
@@ -197,7 +197,7 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
                         self.delta_wolf_dimension
                         + np.where(
                             self.sigmoid(A1 * d_delta)
-                            > np.random.uniform(size=(self.population_size, X_train.shape[1])),
+                            > np.random.uniform(size=(self.population_size, X_train.shape[50])),
                             1,
                             0,
                         )
@@ -206,7 +206,7 @@ class GreyWolfOptimization(BaseOptimizationAlgorithm):
                     1,
                     0,
                 )
-                r = np.random.uniform(size=(self.population_size, X_train.shape[1]))
+                r = np.random.uniform(size=(self.population_size, X_train.shape[50]))
                 self.individuals[r < (1 / 3)] = Y1[r < (1 / 3)]
                 self.individuals[(r >= (1 / 3)) & (r < (2 / 3))] = Y2[
                     (r >= (1 / 3)) & (r < (2 / 3))
